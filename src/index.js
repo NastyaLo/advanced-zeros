@@ -1,47 +1,49 @@
 module.exports = function getZerosCount(number, base) {
     let simple = [];
+    let repeats = {};
     let i = 2;
 
     while(true) {
         if(i == base) {
             simple.push(i);
+            if(!repeats[i]) repeats[i] = 1;
+            else repeats[i]++;
             break;
         } else if(base % i == 0) {
             simple.push(i);
             base /= i;
+            if(!repeats[i]) repeats[i] = 1;
+            else repeats[i]++;
         } else {
             i++;
         };
     };
 
-    simple.sort((a, b) => b - a);
+    var maxValue = Math.pow(simple[0], repeats[simple[0]]);
+    var key = simple[0];
 
-    let baseAmount = 1;
-
-    for(let j = 0; j < simple.length; j++) {
-        if(simple[j] == simple[j+1]) {
-            baseAmount++;
-        } else {
-            break;
-        };
-    };
-
-    let baseNum = simple[0];
+    for (var variable in repeats) {
+        let a = Math.pow(variable, repeats[variable]);
+        if(a > maxValue) {
+            maxValue = a;
+            key = variable;
+        }
+    }
 
     let counter = 0;
 
-    for (let j = 1; j <= number; j++) {
-        let num = j;
-        if(num%baseNum == 0) {
+    for (let i = 1; i <= number; i++) {
+        let num = i;
+        if(num%key == 0) {
             counter++;
-            num /= baseNum;
+            num /= key;
 
-            while(num%baseNum == 0) {
+            while(num%key == 0) {
                 counter++;
-                num /= baseNum;
+                num /= key;
             };
         };
     };
 
-    return Math.floor(counter/baseAmount);
+    return Math.floor(counter/repeats[key]);
 }
