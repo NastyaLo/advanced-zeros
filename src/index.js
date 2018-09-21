@@ -24,25 +24,17 @@ module.exports = function getZerosCount(number, base) {
     };
 
     for (k = 0; k < unique.length; k++) {
-        let counter = 0;
-        let curNum = unique[k];
+        let counter = 0
+        let curDevider = unique[k];
+        let curNum = number;
 
-        for (let i = 1; i <= number; i++) {
-            let num = i;
-            
-            if(num%curNum == 0) {
-                counter++;
-                num /= curNum;
-
-                while(num%curNum == 0) {
-                    counter++;
-                    num /= curNum;
-                };
-            };
+        while (curNum >= curDevider) {
+            curNum = Math.floor(curNum/curDevider);
+            counter += curNum;
         };
 
-        results.push(Math.floor(counter/repeats[curNum]));
-    }
+        results.push(Math.floor(counter/repeats[curDevider]));
+    };
 
     return results.sort((a, b) => a - b)[0];
 }
