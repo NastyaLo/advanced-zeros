@@ -1,17 +1,21 @@
 module.exports = function getZerosCount(number, base) {
     let simple = [];
+    let unique = [];
+    let results = [];
     let repeats = {};
-    let i = 2;
+    let i = 2, k;
 
     while(true) {
         if(i == base) {
             simple.push(i);
+            if(unique.indexOf(i) == -1) unique.push(i);
             if(!repeats[i]) repeats[i] = 1;
             else repeats[i]++;
             break;
         } else if(base % i == 0) {
             simple.push(i);
             base /= i;
+            if(unique.indexOf(i) == -1) unique.push(i);
             if(!repeats[i]) repeats[i] = 1;
             else repeats[i]++;
         } else {
@@ -19,31 +23,26 @@ module.exports = function getZerosCount(number, base) {
         };
     };
 
-    var maxValue = Math.pow(simple[0], repeats[simple[0]]);
-    var key = simple[0];
+    for (k = 0; k < unique.length; k++) {
+        let counter = 0;
+        let curNum = unique[k];
 
-    for (var variable in repeats) {
-        let a = Math.pow(variable, repeats[variable]);
-        if(a > maxValue) {
-            maxValue = a;
-            key = variable;
-        }
-    }
-
-    let counter = 0;
-
-    for (let i = 1; i <= number; i++) {
-        let num = i;
-        if(num%key == 0) {
-            counter++;
-            num /= key;
-
-            while(num%key == 0) {
+        for (let i = 1; i <= number; i++) {
+            let num = i;
+            
+            if(num%curNum == 0) {
                 counter++;
-                num /= key;
+                num /= curNum;
+
+                while(num%curNum == 0) {
+                    counter++;
+                    num /= curNum;
+                };
             };
         };
-    };
 
-    return Math.floor(counter/repeats[key]);
+        results.push(Math.floor(counter/repeats[curNum]));
+    }
+
+    return results.sort((a, b) => a - b)[0];
 }
